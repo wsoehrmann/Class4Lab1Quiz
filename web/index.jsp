@@ -80,9 +80,9 @@
 
         function validateFirstTwoLegs(){
         if (firstleg == null || length < 0){
-        alert ("Please enter a valid number");RequestDispatcher view =
-                request.getRequestDispatcher(destination);
-        view.forward(request, response);
+        alert ("Please enter a valid number");
+               
+       
         return false;
         }{else if (secondleg == null || length < 0){
         alert ("Please enter a valid number");
