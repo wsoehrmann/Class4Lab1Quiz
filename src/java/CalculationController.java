@@ -5,6 +5,7 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "CalculationController", urlPatterns = {"/CalculationController"})
 public class CalculationController extends HttpServlet {
-    
-     private static final String CALC_TYPE = "calcType";
+
+    private static final String CALC_TYPE = "calcType";
     private static final String RECTANGLE = "rectangle";
     private static final String CIRCLE = "circle";
 
@@ -35,15 +36,15 @@ public class CalculationController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-       
-        
+
+
         String calcType = request.getParameter(CALC_TYPE);
         double answer = 0.00;
         String sAnswer = "";
         String calcTitle = "";
         String destination = "/answer.jsp";
-        
-        if(calcType.equals(RECTANGLE)) {
+
+        if (calcType.equals(RECTANGLE)) {
             calcTitle = "Area of a Rectangle";
             String sLength = request.getParameter("length");
             String sWidth = request.getParameter("width");
@@ -53,16 +54,16 @@ public class CalculationController extends HttpServlet {
                 length = Double.valueOf(sLength);
                 width = Double.valueOf(sWidth);
                 answer = length * width;
-                sAnswer = ""+answer;
-            }catch (NumberFormatException nfe) {
-                sAnswer = "Sorry, you must submit 2 numerical value for this computation";
+                sAnswer = "" + answer;
+            } catch (NumberFormatException nfe) {
+                sAnswer = "Sorry, Please submit to valid numbers";
             }
-            
+
             request.setAttribute("answer", sAnswer);
             request.setAttribute("title", calcTitle);
             request.setAttribute("formula", "length x width: (" + sLength + " x " + sWidth + ")");
-            
-        } else if(calcType.equals(CIRCLE)) {
+
+        } else if (calcType.equals(CIRCLE)) {
             calcTitle = "Area of a Circle";
             String sRadius = request.getParameter("radius");
             double pi = 3.14159265395;
@@ -70,43 +71,46 @@ public class CalculationController extends HttpServlet {
             try {
                 radius = Double.valueOf(sRadius);
                 answer = pi * radius * radius;
-                sAnswer = ""+answer;
-            }catch (NumberFormatException nfe) {
+                sAnswer = "" + answer;
+            } catch (NumberFormatException nfe) {
                 sAnswer = "Sorry, you must submit 1 numerical value for this computation";
             }
-            
+
             request.setAttribute("answer", sAnswer);
             request.setAttribute("title", calcTitle);
             request.setAttribute("formula", "PI x radius squared: (" + 3.14 + " x " + sRadius + ")");
-            
-        } else {  // must be triangle
-            calcTitle = "Calculate Unknown Side";
-            String sA = request.getParameter("sideA");
-            String sB = request.getParameter("sideB");
-            String sC = request.getParameter("sideB");
-            
+
+        } else {
+            calcTitle = "Calculate thirdleg of triangle";
+            String sA = request.getParameter("firstleg");
+            String sB = request.getParameter("secondleg");
+            String sC = request.getParameter("thirdleg");
+
             double a = 0;
             double b = 0;
             double c = 0;
-            
+
             try {
                 a = Double.valueOf(sA);
                 b = Double.valueOf(sB);
                 c = (a * a) + (b * b);
                 answer = Math.sqrt(c);
-                sAnswer = ""+answer;
-            }catch (NumberFormatException nfe) {
-                sAnswer = "Sorry, you must submit 2 and only 2 numerical value for this computation";
+                sAnswer = "" + answer;
+            } catch (NumberFormatException nfe) {
+                sAnswer = "Sorry, please submit two legs of a triangle";
             }
-            
+
             request.setAttribute("answer", sAnswer);
             request.setAttribute("title", calcTitle);
             request.setAttribute("formula", "c2 = a2 + b2: " + c + "2 = " + (a * a) + " + " + (b * b));
-            
+
         }
-        
-        
-        
+
+
+        RequestDispatcher view =
+                request.getRequestDispatcher(destination);
+        view.forward(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
